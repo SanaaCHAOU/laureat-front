@@ -51,6 +51,8 @@ export default function LaureatForm(props) {
       }
     ])
 
+    let formMode = (laureat)? 'edit' : 'create';
+
     let thArray = [
       "Nom", "Prénom", "Promotion", "Filière"
     ];
@@ -64,9 +66,26 @@ export default function LaureatForm(props) {
         console.log(target);
         setLaureat(target);
         setLaureatFormEnabled(true);
-        // this.state.formLaureat = laureat;
-        // this.state.laureatFormEnabled = true;
       }
+    }
+
+    function getOnChangeHandler(propertyName) {
+      let onChangeHandler = (event) => {
+          let newLaureat = (laureat)? {...laureat} : {};
+          newLaureat[propertyName] = event.target.value;
+          setLaureat(newLaureat);
+          console.log(laureat);
+      }
+
+      return onChangeHandler;
+    }
+
+    let onSubmitHandler = (event) => {
+      event.preventDefault();
+      let newLaureatsList = laureats.concat([laureat]);
+      setLaureats(newLaureatsList);
+      setLaureatFormEnabled(false);
+      // TODO: call django api to insert the new laureat, adresse, promotion, filiere to the database
     }
 
     return <>
@@ -75,7 +94,7 @@ export default function LaureatForm(props) {
     <Col md={12} hidden={!laureatFormEnabled}>
       <Card title="Ajouter un lauréat"
         content={
-          <form>
+          <form onSubmit={onSubmitHandler}>
             <FormInputs  
               ncols={["col-md-4", "col-md-4", "col-md-4"]}
               properties={[
@@ -85,21 +104,24 @@ export default function LaureatForm(props) {
                   bsClass: "form-control",
                   placeholder: "",
                   defaultValue: laureat? laureat.cne : "",
-                  disabled: false
+                  disabled: false,
+                  onChange: getOnChangeHandler('cne')
                 },
                 {
                   label: "Nom",
                   type: "text",
                   bsClass: "form-control",
                   placeholder: "",
-                  defaultValue: laureat? laureat.nom : ""
+                  defaultValue: laureat? laureat.nom : "",
+                  onChange: getOnChangeHandler('nom')
                 },
                 {
                   label: "Prénom",
                   type: "text",
                   bsClass: "form-control",
                   placeholder: "",
-                  defaultValue: laureat? laureat.prenom : ""
+                  defaultValue: laureat? laureat.prenom : "",
+                  onChange: getOnChangeHandler('prenom')
                 }
                
               ]}
@@ -112,21 +134,24 @@ export default function LaureatForm(props) {
                   type: "email",
                   bsClass: "form-control",
                   placeholder: "",
-                  defaultValue: laureat? laureat.email : ""
+                  defaultValue: laureat? laureat.email : "",
+                  onChange: getOnChangeHandler('email')
                 },
                 {
                   label: "Téléphone",
                   type: "text",
                   bsClass: "form-control",
                   placeholder: "",
-                  defaultValue: laureat? laureat.telephone : ""
+                  defaultValue: laureat? laureat.telephone : "",
+                  onChange: getOnChangeHandler('telephone')
                 },
                 {
                   label: "Date de naissance",
                   type: "text",
                   bsClass: "form-control",
                   placeholder: "",
-                  defaultValue: laureat? laureat.date_naissance : ""
+                  defaultValue: laureat? laureat.date_naissance : "",
+                  onChange: getOnChangeHandler('date_naissance')
                 }
               ]}
               />
@@ -138,21 +163,24 @@ export default function LaureatForm(props) {
                   type: "text",
                   bsClass: "form-control",
                   placeholder: "",
-                  defaultValue: laureat? laureat.situation_familiale : ""
+                  defaultValue: laureat? laureat.situation_familiale : "",
+                  onChange: getOnChangeHandler('situation_familiale')
                 },
                 { 
                   label: "Nationalité",
                   type: "text",
                   bsClass: "form-control",
                   placeholder: "",
-                  defaultValue: laureat? laureat.nationalite : ""
+                  defaultValue: laureat? laureat.nationalite : "",
+                  onChange: getOnChangeHandler('nationalite')
                 },
                 {
                   label: "Genre",
                   type: "text",
                   bsClass: "form-control",
                   placeholder: "",
-                  defaultValue: laureat? laureat.sexe : ""
+                  defaultValue: laureat? laureat.sexe : "",
+                  onChange: getOnChangeHandler('sexe')
                 }
               ]}
               />
@@ -165,21 +193,24 @@ export default function LaureatForm(props) {
                   type: "text",
                   bsClass: "form-control",
                   placeholder: "",
-                  defaultValue: laureat? laureat.date_inscription : ""
+                  defaultValue: laureat? laureat.date_inscription : "",
+                  onChange: getOnChangeHandler('date_inscription')
                 },
                 {
                   label: "Promotion",
                   type: "text",
                   bsClass: "form-control",
                   placeholder: "",
-                  defaultValue: laureat? laureat.promotion : ""
+                  defaultValue: (laureat && laureat.promotion)? laureat.promotion : "",
+                  onChange: getOnChangeHandler('promotion')
                 },
                 {
                   label: "Filière",
                   type: "text",
                   bsClass: "form-control",
                   placeholder: "",
-                  defaultValue: laureat? laureat.filiere : ""
+                  defaultValue: (laureat && laureat.filiere)? laureat.filiere : "",
+                  onChange: getOnChangeHandler('filiere')
                 }
               ]}
             />
@@ -191,7 +222,8 @@ export default function LaureatForm(props) {
                   type: "text",
                   bsClass: "form-control",
                   placeholder: "",
-                  defaultValue: laureat? laureat.adresse.zip_code : ""
+                  defaultValue: (laureat && laureat.adresse)? laureat.adresse.adresse : "",
+                  onChange: getOnChangeHandler('adresse.adresse')
                 }
               ]}
             />
@@ -203,21 +235,24 @@ export default function LaureatForm(props) {
                   type: "text",
                   bsClass: "form-control",
                   placeholder: "",
-                  defaultValue: laureat? laureat.adresse.pays : ""
+                  defaultValue: (laureat && laureat.adresse)? laureat.adresse.pays : "",
+                  onChange: getOnChangeHandler('adresse.pays')
                 },
                 {
                   label: "Ville",
                   type: "text",
                   bsClass: "form-control",
                   placeholder: "",
-                  defaultValue: laureat? laureat.adresse.ville : ""
+                  defaultValue: (laureat && laureat.adresse)? laureat.adresse.ville : "",
+                  onChange: getOnChangeHandler('adresse.ville')
                 },
                 {
                   label: "Code postale",
                   type: "text",
                   bsClass: "form-control",
                   placeholder: "",
-                  defaultValue: laureat? laureat.adresse.zip_code : ""
+                  defaultValue: (laureat && laureat.adresse)? laureat.adresse.zip_code : "",
+                  onChange: getOnChangeHandler('adresse.code_postale')
                 }
               ]}
             />
@@ -248,16 +283,16 @@ export default function LaureatForm(props) {
                       </tr>
                     </thead>
                     <tbody>
-                      {laureats.map((prop, key) => {
+                      {laureats.map((prop, index) => {
                         let displayedObj = {
                           nom: prop.nom,
                           prenom: prop.prenom,
-                          promotion: prop.promotion.annee_scolaire,
-                          filiere: prop.filiere.libelle
+                          promotion: (prop.promotion)? prop.promotion.annee_scolaire : "",
+                          filiere:(prop.filiere)? prop.filiere.libelle : ""
                         };
 
                         return (
-                          <tr key={key}>
+                          <tr key={prop.cne}>
                             {Object.values(displayedObj).map((objProp, key) => {
                               return <td key={key}>{objProp}</td>;
                             })}
