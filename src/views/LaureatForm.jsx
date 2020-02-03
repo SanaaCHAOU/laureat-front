@@ -72,7 +72,14 @@ export default function LaureatForm(props) {
     function getOnChangeHandler(propertyName) {
       let onChangeHandler = (event) => {
           let newLaureat = (laureat)? {...laureat} : {};
-          newLaureat[propertyName] = event.target.value;
+          if(propertyName.includes('.')) {
+            let propertyParts = propertyName.split('.');
+            let [parent, child] = propertyParts;
+            newLaureat[parent] = (newLaureat[parent])? newLaureat[parent] : {};
+            newLaureat[parent][child] = event.target.value;
+          } else {
+            newLaureat[propertyName] = event.target.value;
+          }
           setLaureat(newLaureat);
           console.log(laureat);
       }
@@ -202,7 +209,7 @@ export default function LaureatForm(props) {
                   bsClass: "form-control",
                   placeholder: "",
                   defaultValue: (laureat && laureat.promotion)? laureat.promotion : "",
-                  onChange: getOnChangeHandler('promotion')
+                  onChange: getOnChangeHandler('promotion.annee_scolaire')
                 },
                 {
                   label: "Filière",
@@ -210,7 +217,7 @@ export default function LaureatForm(props) {
                   bsClass: "form-control",
                   placeholder: "",
                   defaultValue: (laureat && laureat.filiere)? laureat.filiere : "",
-                  onChange: getOnChangeHandler('filiere')
+                  onChange: getOnChangeHandler('filiere.libelle')
                 }
               ]}
             />
@@ -290,6 +297,7 @@ export default function LaureatForm(props) {
                           promotion: (prop.promotion)? prop.promotion.annee_scolaire : "",
                           filiere:(prop.filiere)? prop.filiere.libelle : ""
                         };
+                        console.log(displayedObj);
 
                         return (
                           <tr key={prop.cne}>
